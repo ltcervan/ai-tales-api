@@ -84,7 +84,9 @@ router.get('/:id', async (req, res) => {
   const sceneId = req.params.id;
 
   try {
-    const scene = await Scene.findById(sceneId);
+    const scene = await Scene.findById(sceneId)
+    .populate('character') // This will populate the character details
+    .exec();
     if (!scene) {
       return res.status(404).json({ error: 'Scene not found' });
     }

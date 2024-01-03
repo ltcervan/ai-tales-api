@@ -146,7 +146,7 @@ router.get('/users/:userId', async (req, res) => {
 
 router.get('/explore/:userId', async (req, res) => {
   const userId = req.params.userId;
- 
+
 
   try {
     const userCharacters = await Character.find({ user: userId });
@@ -164,6 +164,37 @@ router.get('/explore/:userId', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+/**
+ *
+ *
+ * ======================================
+ * GET ALL SCENES THAT ARE NOT MINE
+ *
+ * ======================================
+ *
+ *
+ * */
+router.get('/explore/feed/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+
+  try {
+    const userCharacters = await Character.find({ user: userId });
+
+
+    const exploreScenes = await Scene.find({
+      character: { $nin: userCharacters.map(character => character._id) }
+    }).sort({ createdAt: -1 });
+    console.log(exploreScenes);
+
+
+    res.status(200).json(exploreScenes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 /**
  *
  *

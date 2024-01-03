@@ -13,7 +13,7 @@ const sceneSchema = new mongoose.Schema({
     likes: Number,
     comments: Number,
     views: Number,
-});
+},{ timestamps: true });
 
 const Scene = mongoose.model('Scene', sceneSchema);
 

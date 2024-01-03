@@ -146,22 +146,17 @@ router.get('/users/:userId', async (req, res) => {
 
 router.get('/explore/:userId', async (req, res) => {
   const userId = req.params.userId;
-  const sortBy = req.query.sortBy || 'date'; // Default to sorting by date
+ 
 
   try {
     const userCharacters = await Character.find({ user: userId });
 
-    let exploreScenes;
 
-    if (sortBy === 'popularity') {
-      // Sort by likes, comments, or any other metric
-      exploreScenes = await Scene.find({ character: { $in: userCharacters.map(character => character._id) } })
-        .sort({ likes: -1 });
-    } else {
-      // Default to sorting by date
-      exploreScenes = await Scene.find({ character: { $in: userCharacters.map(character => character._id) } })
-        .sort({ createdAt: -1 });
-    }
+    const exploreScenes = await Scene.find({
+      character: { $in: userCharacters.map(character => character._id) }
+    }).sort({ createdAt: -1 });
+    console.log(exploreScenes);
+
 
     res.status(200).json(exploreScenes);
   } catch (error) {
